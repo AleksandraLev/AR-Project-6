@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.XR.ARFoundation.Samples;
 
 public class ARUXAnimationManager : MonoBehaviour
 {
@@ -192,6 +194,13 @@ public class ARUXAnimationManager : MonoBehaviour
     {
         m_StartColor = m_AlphaWhite;
         m_TargetColor = m_White;
+        PlaceOnPlane.onPlacedObject += StopVideo;
+    }
+    
+    void OnDestroy()
+    {
+        // Отписка от события при уничтожении объекта
+        PlaceOnPlane.onPlacedObject -= StopVideo;
     }
 
     void Update()
@@ -406,5 +415,18 @@ public class ARUXAnimationManager : MonoBehaviour
 
             m_FadeOff = true;
         }
+    }
+    
+    private void StopVideo()
+    {
+        if (m_VideoPlayer.isPlaying)
+        {
+            m_VideoPlayer.Stop();
+        }
+
+        // Скрытие видео с экрана
+        m_RawImage.texture = m_Transparent; // Место, где используем прозрачную текстуру вместо видео.
+        m_RawImage.color = new Color(1, 1, 1, 0); // Полностью прозрачный RawImage
+        m_InstructionText.text = string.Empty; // Убираем текст
     }
 }

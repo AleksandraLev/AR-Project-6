@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARFoundation.Samples;
 
 public class DisableTrackedVisuals : MonoBehaviour
 {
@@ -46,12 +47,12 @@ public class DisableTrackedVisuals : MonoBehaviour
     
     void OnEnable()
     {
-        PlaceObjectsOnPlane.onPlacedObject += OnPlacedObject;
+        PlaceOnPlane.onPlacedObject += OnPlacedObject;
     }
 
     void OnDisable()
     {
-        PlaceObjectsOnPlane.onPlacedObject -= OnPlacedObject;
+        PlaceOnPlane.onPlacedObject -= OnPlacedObject;
     }
 
     void OnPlacedObject()

@@ -1,9 +1,12 @@
+using System;
 using UnityEngine.InputSystem;
 
 namespace UnityEngine.XR.ARFoundation.Samples
 {
     public abstract class PressInputBase : MonoBehaviour
     {
+        public static event Action onPlacedObject;
+        
         protected InputAction m_PressAction;
 
         protected virtual void Awake()

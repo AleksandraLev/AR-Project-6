@@ -33,6 +33,12 @@ public class GyroscopeCamera : MonoBehaviour
 
     private Quaternion GyroToUnity(Quaternion q)
     {
-        return new Quaternion(q.x, q.y, -q.z, -q.w);
+        // Коррекция ориентации телефона: поворот на 90° по X
+        Quaternion correction = Quaternion.Euler(90, 0, 0);
+
+        // Преобразуем координаты в систему Unity
+        Quaternion converted = new Quaternion(-q.x, -q.y, q.z, q.w);
+
+        return correction * converted;
     }
 }

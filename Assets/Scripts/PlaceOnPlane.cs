@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.SceneManagement;
 
 namespace UnityEngine.XR.ARFoundation.Samples
 {
@@ -21,6 +23,8 @@ namespace UnityEngine.XR.ARFoundation.Samples
 
         public GameObject spawnedObject { get; set; }
         bool m_Pressed;
+        
+        public static event Action onPlacedObject;
 
         //public GameObject spawnedObject { get; private set; }
 
@@ -34,24 +38,25 @@ namespace UnityEngine.XR.ARFoundation.Samples
             {
                 m_PlacedPrefab = value;
 
-                // Когда меняем префаб, нужно создать новый объект на месте старого, если он есть
+                // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
                 if (spawnedObject != null)
                 {
-                    Destroy(spawnedObject); // Удаляем старый объект
+                    Destroy(spawnedObject); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 }
 
-                // Создаем новый объект на текущем месте
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                 if (m_RaycastManager != null && m_RaycastManager.Raycast(Pointer.current.position.ReadValue(), s_Hits, TrackableType.PlaneWithinPolygon))
                 {
                     var hitPose = s_Hits[0].pose;
                     spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
-                    // Получаем позицию камеры
+                    SceneManager.MoveGameObjectToScene(spawnedObject, SceneManager.GetSceneByName("ARSceneFor6"));
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     Vector3 cameraPosition = Camera.main.transform.position;
 
-                    // Вычисляем направление к камере, игнорируя высоту (Y)
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (Y)
                     Vector3 directionToCamera = new Vector3(cameraPosition.x - hitPose.position.x, 0, cameraPosition.z - hitPose.position.z);
 
-                    // Разворачиваем объект к камере (только по Y)
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Y)
                     spawnedObject.transform.rotation = Quaternion.LookRotation(directionToCamera);
                 }
             }
@@ -84,19 +89,25 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 if (spawnedObject == null)
                 {
                     spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
+                    SceneManager.MoveGameObjectToScene(spawnedObject, SceneManager.GetSceneByName("ARSceneFor6"));
                 }
                 else
                 {
                     spawnedObject.transform.position = hitPose.position;
                 }
-                // Получаем позицию камеры
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 Vector3 cameraPosition = Camera.main.transform.position;
 
-                // Вычисляем направление к камере, игнорируя высоту (Y)
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (Y)
                 Vector3 directionToCamera = new Vector3(cameraPosition.x - hitPose.position.x, 0, cameraPosition.z - hitPose.position.z);
 
-                // Разворачиваем объект к камере (только по Y)
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Y)
                 spawnedObject.transform.rotation = Quaternion.LookRotation(directionToCamera);
+                
+                if (onPlacedObject != null)
+                {
+                    onPlacedObject();
+                }
             }
         }
 
